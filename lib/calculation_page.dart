@@ -5,6 +5,7 @@ import 'product_list.dart';
 import 'hicat_calculation.dart';
 import 'vector_calculation.dart';
 import 'enzyme_calculation.dart';
+import 'evo_calculation.dart';
 
 class CalculationPage extends StatefulWidget {
   const CalculationPage({Key? key}) : super(key: key);
@@ -42,8 +43,12 @@ class _CalculationPageState extends State<CalculationPage> {
       productDrySubstance = 'Loss on drying';
       calculationPage = Enzyme(lossOnDrying: lossOnDrying);
     }
+    if (categoryName['mainName'] == 'evo') {
+      productDrySubstance = 'Loss on drying';
+      calculationPage = Evo(lossOnDrying: lossOnDrying);
+    }
     // categoryName['mainName'] == 'vector'? productDrySubstance = 'Dry substance': null;
-    categoryName['mainName'] == 'evo' ? productDrySubstance = 'Loss on drying' : null;
+    // categoryName['mainName'] == 'evo' ? productDrySubstance = 'Loss on drying' : null;
     // categoryName['mainName'] == 'enzyme'? productDrySubstance = 'Loss on drying': null;
 
     // if (chooseStarchText != 'CHOOSE') {
@@ -132,7 +137,7 @@ class _CalculationPageState extends State<CalculationPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      'STARCH DRY SUBSTANCE',
+                      'STARCH HUMIDITY',
                       style: TextStyle(fontSize: 20.0, fontFamily: 'Gruppo', fontWeight: FontWeight.bold),
                     ),
                   ),

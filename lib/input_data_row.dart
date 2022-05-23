@@ -11,11 +11,14 @@ class inputDataRow extends StatelessWidget {
     required this.inputData,
     required this.inputValues,
     required this.textInputColor,
+    required this.minValue,
+
   }) : super(key: key);
 
   final String inputData;
   final Map inputValues;
   final Map textInputColor;
+  final double minValue;
 
 
 
@@ -41,7 +44,7 @@ class inputDataRow extends StatelessWidget {
           flex: 1,
           child: CupertinoTextField(
             onSubmitted: (value) {
-              if (value.isEmpty || double.parse(value) <= 0 ){
+              if (value.isEmpty || double.parse(value) <= minValue ){
                 inputValues[inputData] = '';
                 textInputColor[inputData] = Colors.red;
                 showCupertinoDialog<void>(

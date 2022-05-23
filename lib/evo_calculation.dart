@@ -20,48 +20,105 @@ class _EvoState extends State<Evo> {
 
 
   Map inputValues = {
-    'starch dosing kg/t': '',
-    'production t/h': '',
-    'slurry conc. %': '',
-    'final conc. %': '',
+    'batches/day': '',
+    'days production/year': '',
+    'latex price euro/t': '',
+    'latex dry substance': '',
+    'starch price euro/t': '',
+    'dry solid starch glue %': '',
+    'kg starch/part' : '',
+    'dry solid latex %': '',
+    'kg latex/part': '',
+
+
   };
 
   Map inputTextColor = {
-    'starch dosing dry kg/t': Colors.black,
-    'production t/h': Colors.black,
-    'slurry conc. %': Colors.black,
-    'final conc. %': Colors.black,
+    'batches/day': Colors.black,
+    'days production/year': Colors.black,
+    'latex price euro/t': Colors.black,
+    'latex dry substance': Colors.black,
+    'starch price euro/t': Colors.black,
+    'dry solid starch glue %': Colors.black,
+    'kg starch/part' : Colors.black,
+    'dry solid latex %': Colors.black,
+    'kg latex/part': Colors.black,
+
+  };
+  Map trialInputValues ={
+    'latex parts': '',
+    'evo parts': '',
+  };
+
+  Map standardInputValues = {
+    'latex parts' : '',
+    'evo parts': '',
   };
 
   Map outputValues = {
-    'starch consumption t/m': '',
-    'slurry water l/h': '',
-    'dilution water l/h': '',
-    'enzyme flow l/h': '',
-    'water consumption m3/m': '',
-    'enzyme consumption m3/m': '',
+    'latex 100% dry e/t': '',
+    'dry kg latex/part': '',
+    'starch 100% dry e/t': '',
+    'dry kg starch/part': '',
+    'standard cost/batch': '',
+    'trial cost/batch': '',
+    'standard cost/day': '',
+    'trial cost/day': '',
+    'standard cost/year': '',
+    'trial cost/year': '',
+    'saving/year': '',
   };
 
   void vectorCalculation() {
     setState(() {
       try {
-        var intDosing = double.parse(inputValues['starch dosing kg/t']);
-        var intFinalConc = double.parse((inputValues['final conc. %']));
-        var intSlurryConc = double.parse((inputValues['slurry conc. %']));
-        var intProduction = double.parse((inputValues['production t/h']));
 
-        // var vectorDosingComm = (intDosing/widget.lossOnDrying*100*intProduction);
-        // var dilutionWater = (widget.lossOnDrying/intFinalConc*vectorDosingComm-vectorDosingComm);
-        // var totalVolume = vectorDosingComm + dilutionWater;
-        // var totalVector = (vectorDosingComm * 24*31)/1000;
-        // var totalWater = (dilutionWater*24*31)/1000;
-        //
-        //
-        // outputValues['vector commercial l/h'] = vectorDosingComm.toStringAsFixed(1);
-        // outputValues['total volume l/h'] = totalVolume.toStringAsFixed(1);
-        // outputValues['total vector m3/m'] = totalVector.toStringAsFixed(1);
-        // outputValues['dilution water l/h'] = dilutionWater.toStringAsFixed(1);
-        // outputValues['water consumption m3/m'] = totalWater.toStringAsFixed(1);
+        var batchDay = double.parse(inputValues['batches/day']);
+        var daysProduction = double.parse(inputValues['days production/year']);
+        var latexPrice = double.parse(inputValues['latex price euro/t']);
+        var latexDrySubstance = double.parse(inputValues['latex dry substance']);
+        var evoPrice = double.parse(inputValues['starch price euro/t']);
+
+
+        var drySolidStarchGlue = double.parse(inputValues['dry solid starch glue %']);
+        var starchPart = double.parse(inputValues['kg starch/part']);
+        var drySolidLatex = double.parse(inputValues['dry solid latex %']);
+        var latexPart = double.parse(inputValues['kg latex/part']);
+        
+        var standardLatexParts = double.parse(standardInputValues['latex parts']);
+        var standardEvoParts = double.parse(standardInputValues['evo parts']);
+        var trialLatexParts = double.parse(trialInputValues['latex parts']);
+        var trialEvoParts = double.parse(trialInputValues['evo parts']);
+
+        var latexDryEuro = latexPrice * 100 / latexDrySubstance;
+        var evoDryEuro = evoPrice * 100 / (100-widget.lossOnDrying);
+        
+        var latexDryPart = (latexPart * drySolidLatex)/100;
+        var evoDryPart = (starchPart*drySolidStarchGlue)/ 100;
+
+        var stdBatchCost = (standardEvoParts*evoDryPart*evoDryEuro)/1000 + (standardLatexParts*latexDryPart*latexDryEuro)/1000;
+        var stdDayCost = stdBatchCost * batchDay;
+        var stdYearCost = stdDayCost*daysProduction;
+
+        var trialBatchCost = (trialEvoParts*evoDryPart*evoDryEuro)/1000 + (trialLatexParts*latexDryPart*latexDryEuro)/1000;
+        var trialDayCost = trialBatchCost * batchDay;
+        var trialYearCost = trialDayCost*daysProduction;
+
+        var yearSavings = stdYearCost - trialYearCost;
+
+        outputValues['latex 100% dry e/t'] = latexDryEuro.toStringAsFixed(1);
+        outputValues['dry kg latex/part'] = latexDryPart.toStringAsFixed(1);
+        outputValues['starch 100% dry e/t'] = evoDryEuro.toStringAsFixed(1);
+        outputValues['dry kg starch/part'] = evoDryPart.toStringAsFixed(1);
+        
+        outputValues['standard cost/batch'] = stdBatchCost.toStringAsFixed(1);
+        outputValues['trial cost/batch'] = trialBatchCost.toStringAsFixed(1);
+        outputValues['standard cost/day'] = stdDayCost.toStringAsFixed(1);
+        outputValues['trial cost/day'] = trialDayCost.toStringAsFixed(1);
+        outputValues['standard cost/year'] = stdYearCost.toStringAsFixed(1);
+        outputValues['trial cost/year'] = trialYearCost.toStringAsFixed(1);
+        outputValues['saving/year'] = yearSavings.toStringAsFixed(1);
+  
 
       }on FormatException{
         showCupertinoDialog<void>(
@@ -87,7 +144,36 @@ class _EvoState extends State<Evo> {
                 child: Column(
                   children: [
                     for (String inputData in inputValues.keys)
-                      inputDataRow(inputData: inputData, inputValues: inputValues, textInputColor: inputTextColor),
+                      inputDataRow(inputData: inputData, inputValues: inputValues, textInputColor: inputTextColor, minValue: 0,),
+                    Text('STANDARD LATEX RECIPE',
+                      style: TextStyle(
+                        color: Colors.teal,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19.0,
+                        fontFamily: 'Gruppo',
+
+                      ),),
+                    for (String value in standardInputValues.keys)
+                      inputDataRow(inputData: value, inputValues: standardInputValues,textInputColor: inputTextColor,minValue: -0.000000001,),
+                    Text('TRIAL LATEX RECIPE',
+                      style: TextStyle(
+                        color: Colors.teal,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19.0,
+                        fontFamily: 'Gruppo',
+
+                      ),),
+                    for (String value in trialInputValues.keys)
+                      inputDataRow(inputData: value, inputValues: trialInputValues, textInputColor: inputTextColor,minValue: -0.000000001,),
+                    Text('CALCULATION RESULTS',
+                      style: TextStyle(
+                        color: Colors.teal,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19.0,
+                        fontFamily: 'Gruppo',
+
+                      ),),
+
                     for (String outputData in outputValues.keys)
                       outputDataRow(outputData: outputData, outputValues: outputValues),
                     CupertinoButton(color: Colors.teal,

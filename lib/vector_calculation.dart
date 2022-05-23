@@ -83,7 +83,7 @@ class _VectorState extends State<Vector> {
                 child: Column(
                   children: [
                     for (String inputData in inputValues.keys)
-                      inputDataRow(inputData: inputData, inputValues: inputValues, textInputColor: inputTextColor),
+                      inputDataRow(inputData: inputData, inputValues: inputValues, textInputColor: inputTextColor, minValue: 0,),
                     for (String outputData in outputValues.keys)
                       outputDataRow(outputData: outputData, outputValues: outputValues),
                     CupertinoButton(color: Colors.teal,

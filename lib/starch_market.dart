@@ -1,7 +1,7 @@
 
 import 'main_app_Bar.dart';
 import 'package:flutter/material.dart';
-// import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 
 class MarketPage extends StatefulWidget {
@@ -24,8 +24,8 @@ class _MarketPageState extends State<MarketPage> {
     return SafeArea(
       child: Scaffold(
         appBar: mainAppBar(appBarText: categoryName['categoryName'].toUpperCase(),fontSize: 20.0,),
-        // body:WebView(initialUrl: 'https://www.agritel.com/en/fr',
-        //     javascriptMode: JavascriptMode.unrestricted),
+        body:WebView(initialUrl: 'https://www.agritel.com/en/fr',
+            javascriptMode: JavascriptMode.unrestricted),
       ),
     );
   }
